@@ -1,0 +1,28 @@
+# .gitignore
+
+# System files
+.DS_Store
+
+# Python cache files
+__pycache__/
+
+# Audio files
+*.wav
+
+# Environment variables
+.env
+
+# IDE specific files
+.vscode/
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+*.egg
+
+messages

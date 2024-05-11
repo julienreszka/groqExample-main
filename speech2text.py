@@ -22,9 +22,11 @@ def speech2text(audio_file):
         options = PrerecordedOptions(
             model="nova-2",
             smart_format=True,
+            detect_language=True,
         )
 
         response = deepgram.listen.prerecorded.v("1").transcribe_file(payload, options)
+        print(response)
 
         transcript = response['results']['channels'][0]['alternatives'][0]['transcript']
         return(transcript)

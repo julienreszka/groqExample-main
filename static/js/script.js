@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     messages.appendChild(messageElement);
     conversationHistoryMessages.push({
       role: role,
-      content: message
+      content: message || 'hmmm'
     });
   }
 
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           console.log(
             'STT response: ',
             responseBody);
-          appendMessage('user', responseBody);
+          appendMessage('user', responseBody || 'hmmm');
         }
 
         const answer = await fetch('/text-answer', {
@@ -159,22 +159,50 @@ document.addEventListener('DOMContentLoaded', async () => {
       const text = newMessageField.value;
       appendMessage('user', text);
       newMessageField.value = '';
-      const answer = await fetch('/text-answer', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          messages: conversationHistoryMessages
-        })
-      });
+      try {
+        const answer = await fetch('/text-answer', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            messages: conversationHistoryMessages
+          })
+        });
 
-      if (answer.ok) {
-        const responseAnswerBody = await answer.text();
-        console.log(
-          'Answer response: ',
-          responseAnswerBody);
-        appendMessage('assistant', responseAnswerBody);
+        let responseAnswerBody = ''
+        if (answer.ok) {
+          responseAnswerBody = await answer.text();
+          console.log(
+            'Answer response: ',
+            responseAnswerBody);
+          appendMessage('assistant', responseAnswerBody);
+        }
+
+        const responseFormData = new FormData();
+        responseFormData.append('text', responseAnswerBody);
+        const response = await fetch('/process-text', {
+          method: 'POST',
+          body: responseFormData
+        });
+
+        if (response.ok) {
+          console.log('Audio Answer');
+          // Optionally, handle the server response, such as playing back a modified audio file
+          const returnedBlob = await response.blob();
+          const returnedURL = URL.createObjectURL(returnedBlob);
+          currentAudio = new Audio(returnedURL);
+          startButton.style.display = 'none';
+          interruptButton.style.display = 'block';
+          currentAudio.play();
+          currentAudio.onended = () => {
+            interruptButton.style.display = 'none';
+            startButton.style.display = 'block';
+            loader.style.display = 'none';
+          };
+        }
+      } catch (error) {
+        console.error('Failed to send message:', error);
       }
     }
   })

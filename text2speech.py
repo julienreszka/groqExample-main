@@ -19,8 +19,8 @@ def text2speech(text):
         # aura-luna-en
         # aura-athena-en
         options = SpeakOptions(
-            # model="aura-luna-en",
-            model="aura-zeus-en",
+            model="aura-luna-en",
+            # model="aura-zeus-en",
             encoding="linear16",
             container="wav"
         )

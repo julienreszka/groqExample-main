@@ -27,7 +27,6 @@ def speech2text(audio_file):
         response = deepgram.listen.prerecorded.v("1").transcribe_file(payload, options)
 
         transcript = response['results']['channels'][0]['alternatives'][0]['transcript']
-
         return(transcript)
 
     except Exception as e:

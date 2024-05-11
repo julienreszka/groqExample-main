@@ -13,6 +13,14 @@ pip install -r requirements.txt
 
 ```
 
+### Export deepgram api key
+
+Find your Deepgram API key on https://console.deepgram.com/
+
+```bash
+export DEEPGRAM_API_KEY=your-api-key
+```
+
 ### Export groq api key
 
 Find your GROQ API key on https://console.groq.com/keys
